@@ -119,7 +119,6 @@ const front=[
     ]
   }
 ]
-//创建路由实例
 const router=createRouter({
   history:createWebHistory(),
   routes:[...back,...front]
@@ -148,10 +147,14 @@ router.beforeEach((to,from,next)=>{
   }
  }
  else{//未登录
-  if(to.path.startsWith('/back')){
-  next('/auth/login')
- }else{
-  next()
- }
+ // 需要登录才能访问的页面列表
+    const needLoginPages = ['/consultation', '/emotion-diary', '/back']
+    
+    // 如果用户要去需要登录的页面 → 先去登录
+    if (needLoginPages.includes(to.path) || to.path.startsWith('/back')) {
+      next('/auth/login')
+    } else {
+      next()
+    }
 }})
 export default router
