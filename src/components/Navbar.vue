@@ -1,7 +1,7 @@
 <script setup>
 // 导入所有需要的图标
 import { ArrowDown, Expand } from '@element-plus/icons-vue'
-import avatarImage from '@/assets/images/users.jpg'
+import avatarImage from '@/assets/images/user.jpg'
 import { useRouter,useRoute } from 'vue-router'
 import { useAdminStore } from '@/stores/admin'
 import { loginout } from '@/apis/admin'
