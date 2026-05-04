@@ -48,7 +48,7 @@ const logout = (command) => {
       <el-dropdown @command="logout">
         <div class="dropdown-trigger">
           <el-avatar :src="avatarImage" size="small" style="background-size: cover" />
-          <span class="user-name">李家满</span>
+          <span class="user-name">用户</span>
           <el-icon class="el-icon--right">
             <ArrowDown />
           </el-icon>
