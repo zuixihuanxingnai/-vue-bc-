@@ -1,0 +1,157 @@
+import { componentSizeMap } from 'element-plus'
+import { createRouter, createWebHistory } from 'vue-router'
+import BackLayout from '@/components/BackLayout.vue'
+import AuthLayout from '@/components/AuthLayout.vue'
+import FrontedLayout from '@/components/FrontedLayout.vue'
+//路由配置
+const back=[
+  {
+    path:'/back',
+    component:BackLayout,
+    redirect:'/back/dashbord',
+    children:[
+      {
+        path:'/back/dashbord',
+        component:()=>import('@/views/dashbord.vue'),
+        meta:{
+          title:'数据统计',
+          icon:{
+            name:'PieChart'
+          }
+        }
+      },
+       {
+        path:'/back/knowledge',
+        component:()=>import('@/views/knowledge.vue'),
+        meta:{
+          title:'知识文章',
+          icon:{
+            name:'ChatLineSquare'
+          }
+        }
+      },
+       {
+        path:'/back/consultations',
+        component:()=>import('@/views/consultations.vue'),
+        meta:{
+          title:'咨询管理',
+          icon:{
+            name:'Message'
+          }
+        }
+      },
+      {
+        path:'/back/emotions',
+        component:()=>import('@/views/emotions.vue'),
+        meta:{
+          title:'情绪日志',
+          icon:{
+            name:'User'
+          }
+        }
+      }
+    ]
+  },
+  {
+    path:'/auth',
+    component:AuthLayout,
+    children:[
+      {
+        path:'/auth/login',
+        component:()=>import('@/views/login.vue'),
+        meta:{
+          title:'登录',
+        }
+      },{
+        path:'/auth/register',
+        component:()=>import('@/views/register.vue'),
+        meta:{
+          title:'注册',
+        }
+      }
+    ]
+  }
+]
+const front=[
+  {
+    path:'/',
+    component:FrontedLayout,
+    meta:{
+      title:'首页',
+    },
+    children:[
+      {
+        path:'/',
+        component:()=>import('@/views/home.vue'),
+        meta:{
+          title:'首页',
+        }
+      },
+      {
+        path:'/consultation',
+        component:()=>import('@/views/frontconsulations.vue'),
+        meta:{
+          title:'咨询管理',
+        }
+      },
+      {
+        path:'/emotion-diary',
+        component:()=>import('@/views/frontEmotion.vue'),
+        meta:{
+          title:'情感管理',
+        }
+      },
+      {
+        path:'/knowledge',
+        component:()=>import('@/views/frontKnowledge.vue'),
+        meta:{
+          title:'知识库管理',
+        }
+      },
+      {
+        path:'/knowledge/article/:id',
+        component:()=>import('@/views/frontKnowledgeArticleDetail.vue'),
+        meta:{
+          title:'知识文章',
+        },
+        props:true
+      },
+    ]
+  }
+]
+//创建路由实例
+const router=createRouter({
+  history:createWebHistory(),
+  routes:[...back,...front]
+})
+//导出路由实例
+router.beforeEach((to,from,next)=>{
+ const token=localStorage.getItem('token')
+ if(token){//已登录
+   const userInfo=JSON.parse(localStorage.getItem('userInfo'))
+   if(userInfo.userType===2){//管理员
+      if(to.path.startsWith('/back'))
+     {
+    next()
+    }
+     else{
+    next('/back/dashbord')
+   }
+  }
+  else if(userInfo.userType===1){//普通用户
+    if(to.path.startsWith('/back')||to.path.startsWith('/auth')){
+    next('/')
+    }
+    else{
+    next()
+    }
+  }
+ }
+ else{//未登录
+  if(to.path.startsWith('/back')){
+  next('/auth/login')
+ }else{
+  next()
+ }
+}})
+export default router
