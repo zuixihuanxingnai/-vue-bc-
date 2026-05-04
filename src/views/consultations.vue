@@ -1,6 +1,6 @@
 <script setup>
 import { ref,onMounted } from 'vue'
-import PageHeade from '@/components/pageHeade.vue'
+import PageHeade from '@/components/PageHeade.vue'
 import { getConsultationsList,getSessionDetail } from '@/apis/admin.js'
 
 const listTable=ref([])
